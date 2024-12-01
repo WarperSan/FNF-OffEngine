@@ -1,74 +1,45 @@
 package states;
 
 import core.states.PrimaryState;
-import core.states.PrimaryState;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import helpers.ResourceHelper;
+import objects.Metronome.IBeatable;
+import objects.titleScreen.GFTitle;
 
-class TitleState extends PrimaryState
+class TitleState extends PrimaryState implements IScriptable
 {
 	override public function create()
 	{
 		super.create();
 
+		// var gfTitle:GFTitle = GFTitle.init()
+
 		this.createGF(512, 40);
 		this.createLogo(-150, -100);
 
 		// https://docpiper.com/tests/audio/music/SumertimeBlues.ogg
-		ResourceHelper.loadMusicAsync("https://docpiper.com/tests/audio/music/SumertimeBlues.ogg").onComplete((music) ->
-		{
-			FlxG.sound.playMusic(music, 0, true);
-			FlxG.sound.music.fadeIn(4, 0, 0.7);
-		});
+		// ResourceHelper.loadMusicAsync("https://docpiper.com/tests/audio/music/SumertimeBlues.ogg").onComplete((music) ->
+		// {
+		// 	FlxG.sound.playMusic(music, 0, true);
+		// 	FlxG.sound.music.fadeIn(4, 0, 0.7);
+		// });
 	}
 
 	public override function onBeat()
 	{
-		this.gfBeat();
+		gfTitle.onBeat();
 		this.logoBeat();
 	}
 
 	// #region GF Title
-	private static inline var GF_DANCE_TITLE_IMAGE = "titleScreen/gfDanceTitle.png";
-	private static inline var GF_DANCE_TITLE_XML = "titleScreen/gfDanceTitle.xml";
-
-	private static inline var GF_DANCE_LEFT:String = "danceLeft";
-	private static inline var GF_DANCE_RIGHT:String = "danceRight";
-
-	private var gfTitle:FlxSprite;
-	private var gfDancingLeft:Bool = false;
+	private var gfTitle:GFTitle;
 
 	private function createGF(x:Float, y:Float):Void
 	{
-		gfTitle = new FlxSprite(x, y);
+		gfTitle = GFTitle.createNew(x, y);
 		add(gfTitle);
-
-		var graphicPromise = ResourceHelper.loadGraphicAsync(GF_DANCE_TITLE_IMAGE);
-
-		graphicPromise.onComplete((graphic) ->
-		{
-			gfTitle.loadGraphic(graphic, true);
-
-			var xmlContent = ResourceHelper.loadTextAsync(GF_DANCE_TITLE_XML);
-			xmlContent.onComplete((xml) ->
-			{
-				gfTitle.frames = FlxAtlasFrames.fromSparrow(graphic, xml);
-				gfTitle.animation.addByIndices(GF_DANCE_RIGHT, "gfDance", [30, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14], "", 24, false);
-				gfTitle.animation.addByIndices(GF_DANCE_LEFT, "gfDance", [15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], "", 24, false);
-			});
-		});
-	}
-
-	private function gfBeat():Void
-	{
-		gfDancingLeft = !gfDancingLeft;
-
-		if (gfDancingLeft)
-			gfTitle.animation.play(GF_DANCE_RIGHT, true);
-		else
-			gfTitle.animation.play(GF_DANCE_LEFT, true);
 	}
 
 	// #endregion

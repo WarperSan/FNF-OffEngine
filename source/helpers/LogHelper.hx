@@ -29,7 +29,7 @@ class LogHelper
 		value = Std.string(value);
 
 		// If not a verbose, output
-		if (level != VERBOSE && FlxG.game != null && FlxG.game.debugger != null)
+		if (level != VERBOSE && FlxG.game != null)
 			FlxG.log.advanced(value, level);
 
 		var message:String = buildMessage(value, level);

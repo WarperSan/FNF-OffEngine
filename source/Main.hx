@@ -1,8 +1,6 @@
 package;
 
 import core.ModsManager;
-import core.scripted.ScriptedPrimaryState;
-import core.scripted.ScriptedTitleState.ScriptedTilteState;
 import flixel.FlxG;
 import flixel.FlxGame;
 import helpers.LogHelper;
@@ -24,10 +22,7 @@ class Main extends Sprite
 
 		ModsManager.LoadAllMods();
 
-		var stageClassNames:Array<String> = ScriptedTilteState.listScriptClasses();
-		trace("Loaded primary states: " + stageClassNames);
-
-		var state:PrimaryState = ScriptedTilteState.init(stageClassNames[0]);
+		var state:TitleState = TitleState.createNew();
 
 		addChild(new FlxGame(0, 0, () -> state));
 

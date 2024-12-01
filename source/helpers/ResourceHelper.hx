@@ -27,9 +27,9 @@ class ResourceHelper
 		var isWebResource = StringTools.startsWith(file, "http");
 
 		// If web resource
-		if (isWebResource)
-			future = loadWebAsync(file, type);
-		else
+		// if (isWebResource)
+		//	future = loadWebAsync(file, type);
+		// else
 			future = loadLocalAsync(file, type);
 
 		// Add listeners
@@ -127,7 +127,10 @@ class ResourceHelper
 	// #region Loadings
 
 	/** Loads the file at the given URL asynchronously */
-	private static function loadWebAsync(file:String, type:AssetType):Future<Dynamic> {}
+	private static function loadWebAsync(file:String, type:AssetType):Future<Dynamic>
+	{
+		return null;
+	}
 
 	/** Loads the file at the given ID asynchronously */
 	private static function loadLocalAsync(file:String, type:AssetType):Future<Dynamic>
