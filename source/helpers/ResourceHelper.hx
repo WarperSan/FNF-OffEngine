@@ -27,9 +27,9 @@ class ResourceHelper
 		var isWebResource = StringTools.startsWith(file, "http");
 
 		// If web resource
-		// if (isWebResource)
-		//	future = loadWebAsync(file, type);
-		// else
+		if (isWebResource)
+			future = loadWebAsync(file, type);
+		else
 			future = loadLocalAsync(file, type);
 
 		// Add listeners
@@ -129,7 +129,11 @@ class ResourceHelper
 	/** Loads the file at the given URL asynchronously */
 	private static function loadWebAsync(file:String, type:AssetType):Future<Dynamic>
 	{
-		return null;
+		#if !ALLOW_WEB_RESOURCES
+		LogHelper.error('Tried to load \'$file\', but web resources are not allowed.');
+		return Future.withError(null);
+		#end
+		return loadFileAsync(file, type);
 	}
 
 	/** Loads the file at the given ID asynchronously */

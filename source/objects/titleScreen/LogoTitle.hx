@@ -1,5 +1,6 @@
 package objects.titleScreen;
 
+import core.interfaces.IScriptable;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import helpers.ResourceHelper;

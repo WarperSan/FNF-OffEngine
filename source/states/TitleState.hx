@@ -1,9 +1,8 @@
 package states;
 
+import core.interfaces.IScriptable;
 import core.states.PrimaryState;
 import flixel.FlxG;
-import flixel.FlxSprite;
-import flixel.graphics.frames.FlxAtlasFrames;
 import helpers.ResourceHelper;
 import objects.titleScreen.GFTitle;
 import objects.titleScreen.LogoTitle;
@@ -24,11 +23,11 @@ class TitleState extends PrimaryState implements IScriptable
 		add(logoTitle);
 
 		// https://docpiper.com/tests/audio/music/SumertimeBlues.ogg
-		// ResourceHelper.loadMusicAsync("https://docpiper.com/tests/audio/music/SumertimeBlues.ogg").onComplete((music) ->
-		// {
-		// 	FlxG.sound.playMusic(music, 0, true);
-		// 	FlxG.sound.music.fadeIn(4, 0, 0.7);
-		// });
+		ResourceHelper.loadMusicAsync("https://docpiper.com/tests/audio/music/SumertimeBlues.ogg").onComplete((music) ->
+		{
+			FlxG.sound.playMusic(music, 0, true);
+			FlxG.sound.music.fadeIn(4, 0, 0.7);
+		});
 	}
 
 	public override function onBeat()

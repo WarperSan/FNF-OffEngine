@@ -87,5 +87,5 @@
 	<!-- RESOURCES -->
 
 	<!-- Defines if the application allows resources to come from the web -->
-	<haxedef name="ENABLE_WEB_RESOURCES" />
+	<haxedef name="ALLOW_WEB_RESOURCES" />
 </project>
