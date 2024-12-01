@@ -1,0 +1,9 @@
+# Ignore libs
+.haxelib
+
+# Ignore IDE files
+.vscode
+.idea
+
+# Ignore export files
+export

@@ -1,0 +1,60 @@
+{
+  "dependencies": [
+    {
+      "name": "flixel",
+      "type": "haxelib",
+      "version": "5.8.0"
+    },
+    {
+      "name": "hscript",
+      "type": "haxelib",
+      "version": "2.5.0"
+    },
+    {
+      "name": "hxcpp",
+      "type": "haxelib",
+      "version": "4.3.2"
+    },
+    {
+      "name": "hxcpp-debug-server",
+      "type": "haxelib",
+      "version": "1.2.4"
+    },
+    {
+      "name": "jsonpatch",
+      "type": "haxelib",
+      "version": null
+    },
+    {
+      "name": "jsonpath",
+      "type": "git",
+      "dir": null,
+      "ref": "main",
+      "url": "https://github.com/EliteMasterEric/jsonpath.git"
+    },
+    {
+      "name": "lime",
+      "type": "haxelib",
+      "version": "8.2.1"
+    },
+    {
+      "name": "openfl",
+      "type": "haxelib",
+      "version": "9.4.0"
+    },
+    {
+      "name": "polymod",
+      "type": "git",
+      "dir": null,
+      "ref": "0fbdf27fe124549730accd540cec8a183f8652c0",
+      "url": "https://github.com/larsiusprime/polymod"
+    },
+    {
+      "name": "thx.core",
+      "type": "git",
+      "dir": null,
+      "ref": "master",
+      "url": "https://github.com/fponticelli/thx.core.git"
+    }
+  ]
+}

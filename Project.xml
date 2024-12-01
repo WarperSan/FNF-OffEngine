@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://lime.openfl.org/project/1.0.4"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/xsd/project-1.0.4.xsd">
+
+	<!-- _________________________ Application Settings _________________________ -->
+	<app title="Friday Night Funkin': Off Engine" file="OffEngine" main="Main" version="0.0.1" packageName="com.warpersan.luaengine" package="com.warpersan.luaengine" company="WarperSan" />
+
+	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
+		or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"-->
+	<app preloader="flixel.system.FlxPreloader" />
+
+	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2-->
+	<set name="SWF_VERSION" value="11.8" />
+
+	<!-- ____________________________ Window Settings ___________________________ -->
+
+	<!--These window settings apply to all targets-->
+	<window width="1280" height="720" fps="60" background="#000000" hardware="true" vsync="false" />
+
+	<!--Desktop-specific-->
+	<window if="desktop" orientation="landscape" fullscreen="false" resizable="true" />
+
+	<!-- _____________________________ Path Settings ____________________________ -->
+
+	<set name="BUILD_DIR" value="export" />
+	<source path="source" />
+	<assets path="assets" />
+
+	<!-- _______________________________ Libraries ______________________________ -->
+
+	<haxelib name="lime" version="8.2.1" />
+	<haxelib name="openfl" version="9.4.0" />
+	<haxelib name="flixel" version="5.8.0" />
+
+	<!-- HXCPP -->
+	<haxelib name="hxcpp" version="4.3.2" />
+	<haxelib name="hxcpp-debug-server" if="debug" version="1.2.4" />
+
+	<!-- PolyMod -->
+	<haxelib name="hscript" version="2.5.0" />
+	<haxelib name="polymod" />
+
+	<!-- ______________________________ Haxedefines _____________________________ -->
+
+	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
+	<haxedef name="FLX_NO_MOUSE" if="mobile" />
+	<haxedef name="FLX_NO_KEYBOARD" if="mobile" />
+	<haxedef name="FLX_NO_TOUCH" if="desktop" />
+
+	<!--Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
+	<haxedef name="FLX_NO_DEBUG" unless="debug" />
+
+	<!--Enable this for Nape release builds for a serious peformance improvement-->
+	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
+
+	<!-- Haxe 4.3.0+: Enable pretty syntax errors and stuff. -->
+	<!-- pretty (haxeflixel default), indent, classic (haxe compiler default) -->
+	<haxedef name="message.reporting" value="pretty" />
+
+	<!-- Settings for PolyMod -->
+	<haxedef name="POLYMOD_MOD_ICON_FILE" value="icon.png" />
+	<haxedef name="POLYMOD_MOD_METADATA_FILE" value="meta.json" />
+
+	<haxedef name="POLYMOD_DEBUG" if="debug" value="true" />
+	<haxedef name="POLYMOD_SCRIPT_EXT" value=".hxs" />
+	<haxedef name="POLYMOD_SCRIPT_CLASS_EXT" value=".hx" />
+
+	<haxedef name="POLYMOD_SCRIPT_LIBRARY" value="default" />
+	<haxedef name="POLYMOD_USE_NAMESPACE" value="true" />
+
+	<!-- _________________________________ Custom _______________________________ -->
+
+	<!-- LOGGING -->
+
+	<!-- Defines if the application logs anything -->
+	<haxedef name="ENABLE_LOGGING" if="debug" />
+
+	<!-- Defines if the application logs [VERBOSE] messages -->
+	<haxedef name="LOG_VERBOSE" />
+
+	<!-- Defines if the application adds the time of each log -->
+	<haxedef name="TIMED_LOG" />
+
+	<!-- Defines if the application adds colors to each log -->
+	<haxedef name="COLORED_LOG" />
+
+	<!-- RESOURCES -->
+
+	<!-- Defines if the application allows resources to come from the web -->
+	<haxedef name="ENABLE_WEB_RESOURCES" />
+</project>
