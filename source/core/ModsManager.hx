@@ -6,7 +6,6 @@ import sys.FileSystem;
 
 // Fetch mod page: api.gamebanana.com/Core/List/New?gameid=8694&itemtype=Mod&format=json_min&page=1
 // Get fields options: api.gamebanana.com/Core/Item/Data/AllowedFields?itemtype=Mod
-
 class ModsManager
 {
 	public static var MOD_ROOT(default, null):String;
@@ -55,7 +54,7 @@ class ModsManager
 	// #endregion
 	// #region Load Mods
 
-	public static function LoadAllMods():Void
+	public static function loadAllMods():Void
 	{
 		LogHelper.verbose("Loading all mods...");
 
@@ -65,4 +64,12 @@ class ModsManager
 	}
 
 	// #endregion
+	public static function chooseScriptable(scriptables:Array<String>):String
+	{
+		// If no scriptable, default to base
+		if (scriptables.length == 0)
+			return "base";
+
+		return scriptables[0];
+	}
 }

@@ -19,8 +19,7 @@ class Main extends Sprite
 		};
 
 		ModsManager.init("mods", "assets/");
-
-		ModsManager.LoadAllMods();
+		ModsManager.loadAllMods();
 
 		var state:TitleState = TitleState.createNew();
 

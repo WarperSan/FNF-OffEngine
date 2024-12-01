@@ -5,19 +5,23 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import helpers.ResourceHelper;
-import objects.Metronome.IBeatable;
 import objects.titleScreen.GFTitle;
+import objects.titleScreen.LogoTitle;
 
 class TitleState extends PrimaryState implements IScriptable
 {
+	private var gfTitle:GFTitle;
+	private var logoTitle:LogoTitle;
+
 	override public function create()
 	{
 		super.create();
 
-		// var gfTitle:GFTitle = GFTitle.init()
+		gfTitle = GFTitle.createNew(512, 40);
+		add(gfTitle);
 
-		this.createGF(512, 40);
-		this.createLogo(-150, -100);
+		logoTitle = LogoTitle.createNew(-150, -100);
+		add(logoTitle);
 
 		// https://docpiper.com/tests/audio/music/SumertimeBlues.ogg
 		// ResourceHelper.loadMusicAsync("https://docpiper.com/tests/audio/music/SumertimeBlues.ogg").onComplete((music) ->
@@ -30,48 +34,6 @@ class TitleState extends PrimaryState implements IScriptable
 	public override function onBeat()
 	{
 		gfTitle.onBeat();
-		this.logoBeat();
+		logoTitle.onBeat();
 	}
-
-	// #region GF Title
-	private var gfTitle:GFTitle;
-
-	private function createGF(x:Float, y:Float):Void
-	{
-		gfTitle = GFTitle.createNew(x, y);
-		add(gfTitle);
-	}
-
-	// #endregion
-	// #region Logo Title
-	private static inline var LOGO_BUMP:String = "bump";
-
-	private var logoTitle:FlxSprite;
-
-	private function createLogo(x:Float, y:Float):Void
-	{
-		logoTitle = new FlxSprite(x, y);
-		add(logoTitle);
-
-		var graphicPromise = ResourceHelper.loadGraphicAsync("titleScreen/logoBumpin.png");
-
-		graphicPromise.onComplete((graphic) ->
-		{
-			logoTitle.loadGraphic(graphic, true);
-
-			var xmlContent = ResourceHelper.loadTextAsync("titleScreen/logoBumpin.xml");
-			xmlContent.onComplete((xml) ->
-			{
-				logoTitle.frames = FlxAtlasFrames.fromSparrow(graphic, xml);
-				logoTitle.animation.addByPrefix(LOGO_BUMP, "logo bumpin", 24, false);
-			});
-		});
-	}
-
-	private function logoBeat():Void
-	{
-		logoTitle.animation.play(LOGO_BUMP, true);
-	}
-
-	// #endregion
 }
