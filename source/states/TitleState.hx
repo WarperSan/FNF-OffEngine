@@ -1,9 +1,7 @@
 package states;
 
-import core.interfaces.IScriptable;
 import core.states.PrimaryState;
-import flixel.FlxG;
-import helpers.ResourceHelper;
+import objects.titleScreen.EnterTitle;
 import objects.titleScreen.GFTitle;
 import objects.titleScreen.LogoTitle;
 
@@ -11,6 +9,7 @@ class TitleState extends PrimaryState implements IScriptable
 {
 	private var gfTitle:GFTitle;
 	private var logoTitle:LogoTitle;
+	private var enterTitle:EnterTitle;
 
 	override public function create()
 	{
@@ -21,6 +20,9 @@ class TitleState extends PrimaryState implements IScriptable
 
 		logoTitle = LogoTitle.createNew(-150, -100);
 		add(logoTitle);
+
+		enterTitle = EnterTitle.createNew(100, 576);
+		add(enterTitle);
 
 		// https://docpiper.com/tests/audio/music/SumertimeBlues.ogg
 		ResourceHelper.loadMusicAsync("https://docpiper.com/tests/audio/music/SumertimeBlues.ogg").onComplete((music) ->

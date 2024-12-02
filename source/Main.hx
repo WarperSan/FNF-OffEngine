@@ -1,5 +1,6 @@
 package;
 
+import states.TitleState;
 import core.ModsManager;
 import flixel.FlxG;
 import flixel.FlxGame;

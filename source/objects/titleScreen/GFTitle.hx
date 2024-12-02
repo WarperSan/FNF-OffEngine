@@ -1,10 +1,5 @@
 package objects.titleScreen;
 
-import core.interfaces.IScriptable;
-import flixel.FlxSprite;
-import flixel.graphics.frames.FlxAtlasFrames;
-import objects.Metronome.IBeatable;
-
 class GFTitle extends FlxSprite implements IBeatable implements IScriptable
 {
 	private var IMAGE(default, null) = "titleScreen/gfDanceTitle.png";

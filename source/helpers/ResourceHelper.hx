@@ -13,14 +13,8 @@ import sys.io.File;
 
 class ResourceHelper
 {
-	private static var cachedResources:StringMap<Dynamic> = new StringMap<Dynamic>();
-
 	private static function loadAsync(file:String, type:AssetType):Future<Dynamic>
 	{
-		// If cached, skip load
-		if (cachedResources.exists(file))
-			return Future.withValue(cachedResources.get(file));
-
 		LogHelper.verbose('Loading asynchronously the resource of type \'$type\' at \'$file\'.');
 
 		var future:Future<Dynamic> = null;
@@ -39,15 +33,6 @@ class ResourceHelper
 				e = "Resource Not Found";
 
 			LogHelper.error('Error while loading \'$file\': $e');
-		});
-
-		future.onComplete(d ->
-		{
-			// Dont cache web resources
-			if (isWebResource)
-				return;
-
-			cachedResources.set(file, d);
 		});
 
 		return future;

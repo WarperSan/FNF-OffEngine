@@ -1,7 +1,20 @@
 #if !macro
-// Load all needed classes for PolyMod parsing
-import AssetPaths;
-import core.states.PrimaryState;
+
+// Scripts
+import core.interfaces.IScriptable;
+
+// Objects
+import objects.Metronome.IBeatable;
+
+// Flixel
+import flixel.FlxG;
+import flixel.FlxSprite;
+import flixel.math.FlxMath;
+import flixel.util.FlxColor;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
+import flixel.graphics.frames.FlxAtlasFrames;
+
+// Helpers
 import helpers.ResourceHelper;
-import states.TitleState;
 #end
