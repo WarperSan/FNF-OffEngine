@@ -72,4 +72,9 @@ class ModsManager
 
 		return scriptables[0];
 	}
+
+	public static function getFilePath(file:String)
+	{
+		return polymod.backends.PolymodAssets.getPath(file);
+	}
 }

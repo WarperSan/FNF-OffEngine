@@ -11,6 +11,11 @@ class TitleState extends PrimaryState implements IScriptable
 	private var logoTitle:LogoTitle;
 	private var enterTitle:EnterTitle;
 
+	public function new()
+	{
+		super(102);
+	}
+
 	override public function create()
 	{
 		super.create();
@@ -30,11 +35,5 @@ class TitleState extends PrimaryState implements IScriptable
 			FlxG.sound.playMusic(music, 0, true);
 			FlxG.sound.music.fadeIn(4, 0, 0.7);
 		});
-	}
-
-	public override function onBeat()
-	{
-		gfTitle.onBeat();
-		logoTitle.onBeat();
 	}
 }

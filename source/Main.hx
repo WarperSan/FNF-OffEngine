@@ -26,7 +26,8 @@ class Main extends Sprite
 
 		addChild(new FlxGame(0, 0, () -> state));
 
-		FlxG.updateFramerate = 250;
-		FlxG.drawFramerate = 250;
+		FlxG.mouse.visible = false;
+		FlxG.updateFramerate = 240;
+		FlxG.drawFramerate = 240;
 	}
 }

@@ -1,5 +1,6 @@
 package helpers;
 
+import core.ModsManager;
 import flixel.graphics.FlxGraphic;
 import haxe.ds.StringMap;
 import haxe.io.Path;
@@ -13,42 +14,124 @@ import sys.io.File;
 
 class ResourceHelper
 {
-	private static function loadAsync(file:String, type:AssetType):Future<Dynamic>
+	private static function findFile(file:String, type:AssetType):String
 	{
-		LogHelper.verbose('Loading asynchronously the resource of type \'$type\' at \'$file\'.');
+		// If web resource, skip
+		if (StringTools.startsWith(file, "http"))
+			return file;
 
-		var future:Future<Dynamic> = null;
-		var isWebResource = StringTools.startsWith(file, "http");
+		var folder:String;
 
-		// If web resource
-		if (isWebResource)
-			future = loadWebAsync(file, type);
-		else
-			future = loadLocalAsync(file, type);
-
-		// Add listeners
-		future.onError(e ->
+		switch (type)
 		{
-			if (e == null)
-				e = "Resource Not Found";
+			case FONT:
+				folder = "fonts";
+			case MUSIC:
+				folder = "music";
+			case SOUND:
+				folder = "sounds";
+			case IMAGE:
+				folder = "images";
+			case TEXT:
+				folder = Path.extension(file);
+			default:
+				folder = "";
+		}
 
-			LogHelper.error('Error while loading \'$file\': $e');
-		});
+		// Build path
+		file = Path.join([core.ModsManager.ASSET_PREFIX, folder, file]);
 
-		return future;
+		return ModsManager.getFilePath(file);
 	}
 
+	// #region Synchronous
+
+	/** Creates a new object from a file path synchronously. This means that the object will be returned immediately. */
+	private static function fromFile(file:String, type:AssetType):Dynamic
+	{
+		file = findFile(file, type);
+
+		var resource:Dynamic = null;
+
+		switch (type)
+		{
+			case FONT:
+				resource = Font.fromFile(file);
+			case MUSIC, SOUND:
+				resource = Sound.fromFile(file);
+			case IMAGE:
+				resource = BitmapData.fromFile(file);
+			case TEXT:
+				resource = File.getContent(file);
+			default:
+				LogHelper.error('Tried to load \'$file\', but the type \'$type\' is not supported.');
+				return null;
+		}
+
+		if (resource == null)
+		{
+			LogHelper.error('Failed to load \'${file}\'.');
+			return null;
+		}
+
+		return resource;
+	}
+
+	/** Loads the given font synchronously */
+	public static function loadFont(file:String):Font
+	{
+		return cast fromFile(file, FONT);
+	}
+
+	/** Loads the given music synchronously */
+	public static function loadMusic(file:String):Sound
+	{
+		return cast fromFile(file, MUSIC);
+	}
+
+	/** Loads the given sound synchronously */
+	public static function loadSound(file:String):Sound
+	{
+		return cast fromFile(file, SOUND);
+	}
+
+	/** Loads the given image synchronously */
+	public static function loadImage(file:String):BitmapData
+	{
+		return cast fromFile(file, IMAGE);
+	}
+
+	/** Loads the given graphic synchronously */
+	public static function loadGraphic(file:String):FlxGraphic
+	{
+		var data:BitmapData = loadImage(file);
+		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(data, false, file);
+		return graphic;
+	}
+
+	/** Loads the given text synchronously */
+	public static function loadText(file:String):String
+	{
+		return cast fromFile(file, TEXT);
+	}
+
+	// #endregion
+	// #region Asynchronous
+
+	/** Creates a new object from a file path or web address asynchronously. The file load will occur in the background. */
 	private static function loadFromFile(file:String, type:AssetType):Future<Dynamic>
 	{
 		// If web resource
 		if (StringTools.startsWith(file, "http"))
 		{
 			// If not allowed, skip
-			#if !ENABLE_WEB_RESOURCES
+			#if !ALLOW_WEB_RESOURCES
 			LogHelper.error('Tried to load \'$file\', but web requests for resources are disabled.');
 			return Future.withError(null);
 			#end
 		}
+
+		file = findFile(file, type);
 
 		var resource:Future<Dynamic> = null;
 
@@ -78,137 +161,36 @@ class ResourceHelper
 				resource = Future.withError(null);
 		}
 
-		return resource;
-	}
-
-	private static function fromFile(file:String, type:AssetType):Dynamic
-	{
-		var resource:Dynamic = null;
-
-		switch (type)
+		resource.onError((e) ->
 		{
-			case FONT:
-				resource = Font.fromFile(file);
-			case MUSIC, SOUND:
-				resource = Sound.fromFile(file);
-			case IMAGE:
-				resource = BitmapData.fromFile(file);
-			case TEXT:
-				resource = File.getContent(file);
-			default:
-				LogHelper.error('Tried to load \'$file\', but the type \'$type\' is not supported.');
-				return null;
-		}
-
-		if (resource == null)
-		{
-			LogHelper.error('Failed to load \'${file}\'.');
-			return null;
-		}
+			LogHelper.error('Error while loading \'$file\': $e');
+		});
 
 		return resource;
 	}
-
-	// #region Loadings
-
-	/** Loads the file at the given URL asynchronously */
-	private static function loadWebAsync(file:String, type:AssetType):Future<Dynamic>
-	{
-		#if !ALLOW_WEB_RESOURCES
-		LogHelper.error('Tried to load \'$file\', but web resources are not allowed.');
-		return Future.withError(null);
-		#end
-		return loadFileAsync(file, type);
-	}
-
-	/** Loads the file at the given ID asynchronously */
-	private static function loadLocalAsync(file:String, type:AssetType):Future<Dynamic>
-	{
-		// Fetch folder
-		var folder:String;
-
-		switch (type)
-		{
-			case FONT:
-				folder = "fonts";
-			case MUSIC:
-				folder = "music";
-			case SOUND:
-				folder = "sounds";
-			case IMAGE:
-				folder = "images";
-			case TEXT:
-				folder = Path.extension(file);
-			default:
-				folder = "";
-		}
-
-		// Build path
-		var path = Path.join([core.ModsManager.ASSET_PREFIX, folder, file]);
-
-		/* MANAGE ASSET TOGGLE HERE */
-
-		return loadFileAsync(polymod.backends.PolymodAssets.getPath(path), type);
-	}
-
-	private static function loadFileAsync(file:String, type:AssetType):Future<Dynamic>
-	{
-		switch (type)
-		{
-			case FONT:
-				return Font.loadFromFile(file);
-			case MUSIC, SOUND:
-				return Sound.loadFromFile(file);
-			case IMAGE:
-				return BitmapData.loadFromFile(file);
-			case TEXT:
-				var request = new lime.net.HTTPRequest<String>();
-				return request.load(file).then(function(text)
-				{
-					var extension = Path.extension(file);
-
-					// Parse JSON
-					if (extension == "json")
-						return Future.withValue(haxe.Json.parse(file));
-
-					// Just return the string
-					return Future.withValue(text);
-				});
-			default:
-				LogHelper.error('Tried to load \'$file\', but the type \'$type\' is not supported.');
-				return Future.withError(null);
-		}
-	}
-
-	// #endregion
-	// #region Load Assets
 
 	/** Loads the given font asynchronously */
 	public static function loadFontAsync(file:String):Future<Font>
 	{
-		var promise:Future<openfl.text.Font> = cast loadAsync(file, FONT);
-		return promise;
+		return cast loadFromFile(file, FONT);
 	}
 
 	/** Loads the given music asynchronously */
 	public static function loadMusicAsync(file:String):Future<Sound>
 	{
-		var promise:Future<Sound> = cast loadAsync(file, MUSIC);
-		return promise;
+		return cast loadFromFile(file, MUSIC);
 	}
 
 	/** Loads the given sound asynchronously */
 	public static function loadSoundAsync(file:String):Future<Sound>
 	{
-		var promise:Future<Sound> = cast loadAsync(file, SOUND);
-		return promise;
+		return cast loadFromFile(file, SOUND);
 	}
 
 	/** Loads the given image asynchronously */
 	public static function loadImageAsync(file:String):Future<BitmapData>
 	{
-		var promise:Future<BitmapData> = cast loadAsync(file, IMAGE);
-		return promise;
+		return cast loadFromFile(file, IMAGE);
 	}
 
 	/** Loads the given graphic asynchronously */
@@ -216,11 +198,11 @@ class ResourceHelper
 	{
 		var promise:Future<BitmapData> = loadImageAsync(file);
 
-		return promise.then((bmd) ->
+		return promise.then((data) ->
 		{
 			var promise:Promise<FlxGraphic> = new Promise<FlxGraphic>();
 
-			var graphic:FlxGraphic = FlxGraphic.fromBitmapData(bmd, false, file);
+			var graphic:FlxGraphic = FlxGraphic.fromBitmapData(data, false, file);
 			promise.complete(graphic);
 			return promise.future;
 		});
@@ -229,8 +211,7 @@ class ResourceHelper
 	/** Loads the given text asynchronously */
 	public static function loadTextAsync(file:String):Future<String>
 	{
-		var promise:Future<String> = cast loadAsync(file, TEXT);
-		return promise;
+		return cast loadFromFile(file, TEXT);
 	}
 
 	// #endregion
