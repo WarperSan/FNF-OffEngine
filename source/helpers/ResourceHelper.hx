@@ -1,5 +1,6 @@
 package helpers;
 
+import haxe.Json;
 import core.ModsManager;
 import flixel.graphics.FlxGraphic;
 import haxe.ds.StringMap;
@@ -115,6 +116,13 @@ class ResourceHelper
 		return cast fromFile(file, TEXT);
 	}
 
+	/** Loads the given JSON synchronously */
+	public static function loadJson<T>(file:String):T
+	{
+		var text = loadText(file);
+		return cast Json.parse(text);
+	}
+
 	// #endregion
 	// #region Asynchronous
 
@@ -212,6 +220,22 @@ class ResourceHelper
 	public static function loadTextAsync(file:String):Future<String>
 	{
 		return cast loadFromFile(file, TEXT);
+	}
+
+	/** Loads the given JSON asynchronously */
+	public static function loadJsonAsync<T>(file:String):Future<T>
+	{
+		var promise = loadTextAsync(file);
+
+		return promise.then((text) ->
+		{
+			var promise:Promise<T> = new Promise<T>();
+
+			var obj:T = cast Json.parse(text);
+
+			promise.complete(obj);
+			return promise.future;
+		});
 	}
 
 	// #endregion
