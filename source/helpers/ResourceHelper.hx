@@ -48,9 +48,10 @@ class ResourceHelper
 	// #region Synchronous
 
 	/** Creates a new object from a file path synchronously. This means that the object will be returned immediately. */
-	private static function fromFile(file:String, type:AssetType):Dynamic
+	private static function fromFile(file:String, type:AssetType, isAbsolute:Bool):Dynamic
 	{
-		file = findFile(file, type);
+		if (!isAbsolute)
+			file = findFile(file, type);
 
 		var resource:Dynamic = null;
 
@@ -79,50 +80,36 @@ class ResourceHelper
 	}
 
 	/** Loads the given font synchronously */
-	public static function loadFont(file:String):Font
-	{
-		return cast fromFile(file, FONT);
-	}
+	public inline static function loadFont(file:String, isAbsolute:Bool = false):Font
+		return cast fromFile(file, FONT, isAbsolute);
 
 	/** Loads the given music synchronously */
-	public static function loadMusic(file:String):Sound
-	{
-		return cast fromFile(file, MUSIC);
-	}
+	public inline static function loadMusic(file:String, isAbsolute:Bool = false):Sound
+		return cast fromFile(file, MUSIC, isAbsolute);
 
 	/** Loads the given sound synchronously */
-	public static function loadSound(file:String):Sound
-	{
-		return cast fromFile(file, SOUND);
-	}
+	public inline static function loadSound(file:String, isAbsolute:Bool = false):Sound
+		return cast fromFile(file, SOUND, isAbsolute);
 
 	/** Loads the given image synchronously */
-	public static function loadImage(file:String):BitmapData
-	{
-		return cast fromFile(file, IMAGE);
-	}
+	public inline static function loadImage(file:String, isAbsolute:Bool = false):BitmapData
+		return cast fromFile(file, IMAGE, isAbsolute);
 
 	/** Loads the given graphic synchronously */
-	public static function loadGraphic(file:String):FlxGraphic
-	{
-		var data:BitmapData = loadImage(file);
-		var graphic:FlxGraphic = FlxGraphic.fromBitmapData(data, false, file);
-		return graphic;
-	}
+	public inline static function loadGraphic(file:String, isAbsolute:Bool = false):FlxGraphic
+		return FlxGraphic.fromBitmapData(loadImage(file, isAbsolute), false, file);
 
 	/** Loads the given text synchronously */
-	public static function loadText(file:String):String
-	{
-		return cast fromFile(file, TEXT);
-	}
+	public inline static function loadText(file:String, isAbsolute:Bool = false):String
+		return cast fromFile(file, TEXT, isAbsolute);
 
 	/** Loads the given JSON synchronously */
-	public static function loadJson<T>(file:String):T
+	public static function loadJson(file:String, isAbsolute:Bool = false):Dynamic
 	{
-		var text = loadText(file);
-		return cast Json.parse(text);
+		return Json.parse(loadText(file, isAbsolute));
 	}
 
+	//
 	// #endregion
 	// #region Asynchronous
 
@@ -223,15 +210,15 @@ class ResourceHelper
 	}
 
 	/** Loads the given JSON asynchronously */
-	public static function loadJsonAsync<T>(file:String):Future<T>
+	public static function loadJsonAsync(file:String):Future<Dynamic>
 	{
 		var promise = loadTextAsync(file);
 
 		return promise.then((text) ->
 		{
-			var promise:Promise<T> = new Promise<T>();
+			var promise:Promise<Dynamic> = new Promise<Dynamic>();
 
-			var obj:T = cast Json.parse(text);
+			var obj = Json.parse(text);
 
 			promise.complete(obj);
 			return promise.future;

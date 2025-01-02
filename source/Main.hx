@@ -1,6 +1,5 @@
 package;
 
-import states.TitleState;
 import core.ModsManager;
 import flixel.FlxG;
 import flixel.FlxGame;
@@ -22,9 +21,10 @@ class Main extends Sprite
 		ModsManager.init("mods", "assets/");
 		ModsManager.loadAllMods();
 
-		var state:TitleState = TitleState.createNew();
+		//var state:TitleState = TitleState.createNew();
 
-		addChild(new FlxGame(0, 0, () -> state));
+		//addChild(new FlxGame(0, 0, () -> state));
+		addChild(new FlxGame(0, 0, states.TestState));
 
 		FlxG.mouse.visible = false;
 		FlxG.updateFramerate = 240;

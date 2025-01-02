@@ -40,6 +40,9 @@
 	<haxelib name="hscript" version="2.5.0" />
 	<haxelib name="polymod" />
 
+	<haxelib name="json2object" />
+	<haxelib name="hxjsonast" />
+
 	<!-- ______________________________ Haxedefines _____________________________ -->
 
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
